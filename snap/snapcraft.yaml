@@ -1,0 +1,43 @@
+name: crowdwalk # you probably want to 'snapcraft register <name>'
+base: core18 # the base snap is the execution environment for this snap
+version: '2022.10.12' # just for humans, typically '1.2+git' or '1.3.2'
+summary: A multi-agent pedestrian simulator # 79 char long summary
+description: |
+  A multi-agent pedestrian simulator.
+  https://github.com/crest-cassia/CrowdWalk
+
+grade: stable #devel # must be 'stable' to release into candidate/stable channels
+confinement: strict #devmode # use 'strict' once you have the right plugs and slots
+
+parts:
+  crowdwalk:
+    plugin: gradle
+    source: CrowdWalk/crowdwalk
+    build-packages:
+      - ca-certificates
+      - ca-certificates-java
+      - openjdk-17-jdk
+      - openjdk-17-jre
+      - git
+    stage-packages:
+      - openjdk-17-jre
+      - fontconfig
+      - fontconfig-config
+      - fonts-takao-gothic
+    override-prime: |
+      snapcraftctl prime
+      rm -vf usr/lib/jvm/java-11-openjdk-*/lib/security/blacklisted.certs
+  shell:
+    plugin: dump
+    source: bin
+
+apps:
+  crowdwalk:
+    command: $SNAP/crowdwalk.sh
+    extensions: 
+      - flutter-stable
+    environment:
+      LC_ALL: C.UTF-8
+    plugs:
+      - home
+      - network

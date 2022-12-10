@@ -1,0 +1,3 @@
+[submodule "CrowdWalk"]
+	path = CrowdWalk
+	url = https://github.com/crest-cassia/CrowdWalk.git
